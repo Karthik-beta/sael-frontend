@@ -1,0 +1,210 @@
+<div class="card" *ngIf="showElements === 'true'">
+    <div class="container-fluid col-12 mb-0">
+        <div class="grid mb-0">
+            <div class="col-md-12 mb-0">
+                <div class="title justify-content-center">
+                    <div class="col-auto">
+                        <app-shift></app-shift>
+                    </div>
+                </div>
+                <div class="grid">
+                    <div class="col-10 lg:col-8 xl:col-10 mb-0">
+                        <p-chart type="bar" [data]="barChart" [options]="barOptions"></p-chart>
+                    </div>
+                    <div class="col-2 lg:col-4 xl:col-2 gif-card mb-0">
+                        <img src="assets/layout/images/green.gif" alt="" width="99%" height="70px">
+                    </div>
+                </div>
+                <p-chart type="bar" [data]="bar2Chart" [options]="bar2Options"></p-chart>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+<div class="card mb-3">
+
+    <div class="flex justify-content-center font-medium">
+        <h6 class="block text-600 font-bold">{{ currentDate | date:'dd/MM/yyyy' }}</h6>
+    </div>
+    <div class="flex justify-content-center font-large ">
+        <div class="grid justify-content-center">
+            <h4 class="text-800 block font-bold">
+                {{ currentDate | date: 'HH:mm:ss':'Asia/Kolkata'  }}
+                <span style="font-size: small;">{{ currentDate | date: 'a':'Asia/Kolkata' }}</span>
+            </h4>
+        </div>
+    </div>
+
+
+
+
+    <div class="mb-2">
+        <p-table #dt1 [value]="singleMachineList" dataKey="id" styleClass="p-datatable-gridlines" responsiveLayout="scroll">
+            <ng-template pTemplate="caption">
+                <div class="flex justify-content-between flex-column sm:flex-row">
+                    <div class="d-flex align-items-center">
+                        <!-- <p-toggleButton (click)="toggleElements()" onLabel="Hide" offLabel="Show"></p-toggleButton> -->
+                        <p-selectButton [options]="stateOptions" [(ngModel)]="showElements" optionLabel="label" optionValue="value"></p-selectButton>
+                        <p-splitButton icon="pi pi-bars" [model]="items" styleClass="p-button-primary ml-1"></p-splitButton>
+                    </div>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="min-width: 12rem">
+                        <div class="flex justify-content-between align-items-center">
+                            Plant
+                        </div>
+                    </th>
+                    <th style="min-width: 12rem">
+                        <div class="flex justify-content-between align-items-center">
+                            Shopfloor
+                        </div>
+                    </th>
+                    <th style="min-width: 12rem">
+                        <div class="flex justify-content-between align-items-center">
+                            Assemblyline
+                        </div>
+                    </th>
+                    <th style="min-width: 12rem">
+                        <div class="flex justify-content-between align-items-center">
+                            Machine ID
+                        </div>
+                    </th>
+                    <th style="min-width: auto; white-space: nowrap;">
+                        <div class="flex justify-content-between align-items-center">
+                            Assigned Start Production
+                        </div>
+                    </th>
+                    <th style="min-width: auto; white-space: nowrap;">
+                        <div class="flex justify-content-between align-items-center">
+                            Assigned End Production
+                        </div>
+                    </th>
+                    <th style="min-width: 14rem">
+                        <div class="flex justify-content-between align-items-center">
+                            Status
+                        </div>
+                    </th>
+                    <th style="min-width: 12rem">
+                        <div class="flex justify-content-between align-items-center">
+                            Performance
+                        </div>
+                    </th>
+                    <!-- <th style="min-width: 8rem">
+                        <div class="flex justify-content-between align-items-center">
+                            View
+                            <p-columnFilter type="boolean" field="verified" display="menu"></p-columnFilter>
+                        </div>
+                    </th> -->
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-item>
+                <tr>
+                    <td>
+                        {{ item.plant }}
+                    </td>
+                    <td>
+                        {{ item.shopfloor }}
+                    </td>
+                    <td>
+                        {{ item.assemblyline }}
+                    </td>
+                    <td>
+                        <img src="assets/demo/images/machines/milling-machine.jpg" width="32" style="vertical-align: middle"/>
+                        <span class="image-text ml-2">{{ item.machine_id }}</span>
+                    </td>
+                    <td>
+                        {{ item.start_prod }}
+                    </td>
+                    <td>
+                        {{ item.end_prod }}
+                    </td>
+                    <td>
+                        <span [class]="'state-badge state-' + item.state">{{ item.state }}</span>
+                    </td>
+                    <td>
+                        <p-progressBar [value]="item.activity" [showValue]="true" [style]="{'color': 'green'}"></p-progressBar>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="8">No machines found.</td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="loadingbody">
+                <tr>
+                    <td colspan="8">Loading machine data. Please wait.</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+
+
+
+
+    <p-table [value]="machineWiseDataList" class="p-datatable-sm text-900" styleClass="p-datatable-sm p-datatable-gridlines" [tableStyle]="{ 'min-width': 'auto', 'font-size': 'small', 'font-weight': 'bold', 'color': 'black' }" [rows]="rows">
+        <ng-template pTemplate="header">
+          <tr class="text-size header-row">
+            <th scope="col">Product ID</th>
+            <th scope="col">Shift </th>
+            <th scope="col">M/C On Hours</th>
+            <th scope="col">kW-h</th>
+            <th scope="col">M/C Idle Hours</th>
+            <th scope="col">Actual</th>
+            <th scope="col">Target</th>
+            <th scope="col">Performance</th>
+            <th scope="col">Gap</th>
+            <th scope="col">Sauld</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-dataItem>
+          <tr class="text-size data-row text-900">
+            <td>AQUA 1000ml</td>
+            <td>{{ dataItem.time }}</td>
+            <td style="width: auto;">{{ dataItem.on_time }}</td>
+            <td style="width: auto"></td>
+            <td style="width: auto;">{{ dataItem.idle_time }}</td>
+            <td>{{ dataItem.actual }}</td>
+            <td>{{ dataItem.target}}</td>
+            <td [ngStyle]="getBackgroundColorStyle(dataItem.performance)">{{ dataItem.performance }} %</td>
+            <td [ngStyle]="getBackgroundColorStyleForGap(dataItem.performance)">{{ dataItem.performance }}</td>
+            <td style="padding: 0em">
+                <div class="col d-flex justify-content-center">
+                    <button type="button" class="btn btn-sm btn-info" (click)="editClick(dataItem)" (click)="display=true" pTooltip="Edit" tooltipPosition="bottom">
+                        <i class="fa fa-pencil"></i>
+                    </button>
+                </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+</div>
+
+
+
+
+
+
+
+<!-- Modal Snippet -->
+<!-- <div class="modal fade" id="staticBackdrop" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"><div class="modal-dialog modal-xl modal-dialog-centered" ><div class="modal-content"><div class="modal-header" ><h5 class="modal-title" id="exampleModalLabel">{{ModalTitle}}</h5><button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closeClick()"><span aria-hidden="true">&times;</span></button></div><div class="modal-body" style="width:100%; background-color: aliceblue;"><app-add-edit-prod-plan [prodplan]="prodplan" *ngIf="ActivateAddEditProdPlanComp" (prodPlanAdded)="onprodPlanAdded()"></app-add-edit-prod-plan></div></div></div></div> -->
+<p-dialog header="{{ ModalTitle }}" [(visible)]="display" [modal]="true" showEffect="fade" [style]="{width: '50vw'}" [breakpoints]="{'960px': '75vw'}">
+    <ng-template pTemplate="content">
+        <app-add-edit-prod-machinewise [prodmach]="prodmach" *ngIf="ActivateAddEditProductionMachineComp" (prodMachAdded)="onprodMachAdded()"></app-add-edit-prod-machinewise>
+    </ng-template>
+    <ng-template pTemplate="footer">
+        <button pButton icon="fa-solid fa-x" (click)="closeClick()" (click)="display=false" label="Close" class="p-button-outlined"></button>
+        <button pButton icon="fa-solid fa-floppy-disk" (click)="addProductionPlan()" *ngIf="prodplan.employee_id == null" label="Save" class="p-button-success"></button>
+        <button pButton icon="fa-solid fa-pencil" (click)="updateProductionPlan()" *ngIf="prodplan.employee_id!= null" label="Update" class="p-button-info"></button>
+    </ng-template>
+</p-dialog>
